@@ -1,3 +1,2 @@
 rumps
-pync
 pyobjc
