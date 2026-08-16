@@ -25,8 +25,8 @@ import MTCleanMac
 
 class MTCleanMacApp(rumps.App):
     def __init__(self):
-        super().__init__("🧹", quit_button="Çıkış")
-        self.clean_item = rumps.MenuItem("Şimdi Temizle", callback=self.clean_now)
+        super().__init__("🧹", quit_button="Quit")
+        self.clean_item = rumps.MenuItem("Clean Now", callback=self.clean_now)
         self.menu = [self.clean_item]
         self._cleaning = False
 
@@ -35,7 +35,7 @@ class MTCleanMacApp(rumps.App):
             return
         self._cleaning = True
         self.title = "🧹⏳"
-        self.clean_item.title = "Temizleniyor..."
+        self.clean_item.title = "Cleaning..."
         self.clean_item.set_callback(None)
         threading.Thread(target=self._run_cleanup, daemon=True).start()
 
@@ -50,12 +50,12 @@ class MTCleanMacApp(rumps.App):
         finally:
             self._cleaning = False
             self.title = "🧹"
-            self.clean_item.title = "Şimdi Temizle"
+            self.clean_item.title = "Clean Now"
             self.clean_item.set_callback(self.clean_now)
             if error:
-                rumps.notification("MTCleanMac", "Hata", error)
+                rumps.notification("MTCleanMac", "Error", error)
             else:
-                rumps.notification("MTCleanMac", "Tamamlandı", "Temizlik işlemi bitti ✅")
+                rumps.notification("MTCleanMac", "Done", "Cleanup finished ✅")
 
 
 if __name__ == "__main__":
