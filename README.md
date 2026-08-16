@@ -58,4 +58,7 @@ the build as a workflow artifact instead of a Release.
 
 ## Autostart at login
 
-Add the built `MTCleanMac.app` to System Settings > General > Login Items.
+Open the menu bar app and toggle "Launch at Login" in its menu. This
+writes a LaunchAgent to `~/Library/LaunchAgents/com.mansur.mtcleanmac.plist`
+and registers/unregisters it with `launchctl` — no need to use
+System Settings > Login Items manually.
