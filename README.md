@@ -21,12 +21,23 @@ python3 setup.py py2app
 
 The bundle is written to `dist/MTCleanMac.app`.
 
+## First launch after downloading a release
+
+Builds are ad-hoc signed, not notarized by Apple, so macOS Gatekeeper
+blocks the app the first time you open a downloaded `.app` ("MTCleanMac.app
+Not Opened"). Clear the quarantine flag once and it opens normally after:
+
+```bash
+xattr -cr /path/to/MTCleanMac.app
+```
+
 ## Release process (GitHub Actions)
 
 Releases are built automatically by [.github/workflows/release.yml](.github/workflows/release.yml)
 on a macOS runner and published as a GitHub Release with the `.app` zipped up.
-The build is ad-hoc code-signed (no Apple Developer account required); on
-first launch macOS Gatekeeper will require right-click > Open once.
+The build is ad-hoc code-signed (no Apple Developer account required); see
+"First launch after downloading a release" above for clearing the
+Gatekeeper block.
 
 To cut a release:
 
