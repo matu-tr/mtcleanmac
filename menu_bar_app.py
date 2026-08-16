@@ -16,38 +16,14 @@
 # along with this program. If not, see <https://www.gnu.org/licenses/>.
 
 """MTCleanMac menu bar app: lives in the macOS status bar, cleans with one click."""
-import os
-import subprocess
-import sys
 import threading
-from pathlib import Path
 
 import rumps
+from ServiceManagement import SMAppService
 
 import MTCleanMac
 
-LOGIN_ITEM_LABEL = "com.mansur.mtcleanmac"
-LOGIN_ITEM_PLIST = Path(f"~/Library/LaunchAgents/{LOGIN_ITEM_LABEL}.plist").expanduser()
-
-
-def _login_item_program_args():
-    if getattr(sys, "frozen", False):
-        return [sys.executable]
-    return [sys.executable, os.path.abspath(__file__)]
-
-
-def _login_item_plist_contents():
-    args = "".join(f"<string>{arg}</string>" for arg in _login_item_program_args())
-    return (
-        '<?xml version="1.0" encoding="UTF-8"?>\n'
-        '<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" '
-        '"http://www.apple.com/DTDs/PropertyList-1.0.dtd">\n'
-        '<plist version="1.0">\n<dict>\n'
-        f"    <key>Label</key>\n    <string>{LOGIN_ITEM_LABEL}</string>\n"
-        f"    <key>ProgramArguments</key>\n    <array>{args}</array>\n"
-        "    <key>RunAtLoad</key>\n    <true/>\n"
-        "</dict>\n</plist>\n"
-    )
+SM_APP_SERVICE_STATUS_ENABLED = 1
 
 
 class MTCleanMacApp(rumps.App):
@@ -55,7 +31,7 @@ class MTCleanMacApp(rumps.App):
         super().__init__("🧹", quit_button="Quit")
         self.clean_item = rumps.MenuItem("Clean Now", callback=self.clean_now)
         self.login_item = rumps.MenuItem("Launch at Login", callback=self.toggle_login_item)
-        self.login_item.state = LOGIN_ITEM_PLIST.exists()
+        self.login_item.state = self._login_item_enabled()
         self.menu = [self.clean_item, None, self.login_item]
         self._cleaning = False
 
@@ -86,17 +62,24 @@ class MTCleanMacApp(rumps.App):
             else:
                 rumps.notification("MTCleanMac", "Done", "Cleanup finished ✅")
 
+    def _login_item_enabled(self):
+        try:
+            return SMAppService.mainAppService().status() == SM_APP_SERVICE_STATUS_ENABLED
+        except Exception:
+            return False
+
     def toggle_login_item(self, sender):
-        uid = os.getuid()
-        if sender.state:
-            subprocess.run(["launchctl", "bootout", f"gui/{uid}", str(LOGIN_ITEM_PLIST)])
-            LOGIN_ITEM_PLIST.unlink(missing_ok=True)
-            sender.state = False
-        else:
-            LOGIN_ITEM_PLIST.parent.mkdir(parents=True, exist_ok=True)
-            LOGIN_ITEM_PLIST.write_text(_login_item_plist_contents())
-            subprocess.run(["launchctl", "bootstrap", f"gui/{uid}", str(LOGIN_ITEM_PLIST)])
-            sender.state = True
+        service = SMAppService.mainAppService()
+        try:
+            if self._login_item_enabled():
+                ok, error = service.unregisterAndReturnError_(None)
+            else:
+                ok, error = service.registerAndReturnError_(None)
+            if not ok:
+                raise RuntimeError(str(error))
+        except Exception as e:
+            rumps.notification("MTCleanMac", "Error", str(e))
+        sender.state = self._login_item_enabled()
 
 
 if __name__ == "__main__":

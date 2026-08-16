@@ -58,7 +58,8 @@ the build as a workflow artifact instead of a Release.
 
 ## Autostart at login
 
-Open the menu bar app and toggle "Launch at Login" in its menu. This
-writes a LaunchAgent to `~/Library/LaunchAgents/com.mansur.mtcleanmac.plist`
-and registers/unregisters it with `launchctl` — no need to use
-System Settings > Login Items manually.
+Open the menu bar app and toggle "Launch at Login" in its menu. This uses
+Apple's `SMAppService` API to register the app as a real login item, so it
+also shows up (and can be toggled) in System Settings > General > Login
+Items. Requires macOS 13 (Ventura) or later, and only works from the
+packaged `.app` — not when running `menu_bar_app.py` from source.
