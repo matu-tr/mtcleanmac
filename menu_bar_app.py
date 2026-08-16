@@ -21,7 +21,6 @@ import threading
 import rumps
 
 import MTCleanMac
-import clean_snapshots_if_safe
 
 
 class MTCleanMacApp(rumps.App):
@@ -45,7 +44,7 @@ class MTCleanMacApp(rumps.App):
         try:
             for path in MTCleanMac.CLEANUP_PATHS:
                 MTCleanMac.delete_contents(path)
-            clean_snapshots_if_safe.main()
+            MTCleanMac.clean_snapshots()
         except Exception as e:
             error = str(e)
         finally:
