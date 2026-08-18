@@ -1,4 +1,4 @@
-# MTCleanMac
+# Silkele
 
 Menu bar (status bar) app for macOS that cleans caches, logs, Xcode
 derived data, and local Time Machine snapshots with a single click.
@@ -19,16 +19,16 @@ pip3 install -r requirements.txt py2app
 python3 setup.py py2app
 ```
 
-The bundle is written to `dist/MTCleanMac.app`.
+The bundle is written to `dist/Silkele.app`.
 
 ## First launch after downloading a release
 
 Builds are ad-hoc signed, not notarized by Apple, so macOS Gatekeeper
-blocks the app the first time you open a downloaded `.app` ("MTCleanMac.app
+blocks the app the first time you open a downloaded `.app` ("Silkele.app
 Not Opened"). Clear the quarantine flag once and it opens normally after:
 
 ```bash
-xattr -cr /path/to/MTCleanMac.app
+xattr -cr /path/to/Silkele.app
 ```
 
 ## Release process (GitHub Actions)
@@ -49,7 +49,7 @@ To cut a release:
    git push origin v0.1.0
    ```
 
-3. GitHub Actions builds `MTCleanMac.app`, zips it, and attaches it to a new
+3. GitHub Actions builds `Silkele.app`, zips it, and attaches it to a new
    Release for that tag. The workflow fails if the tag doesn't match `VERSION`.
 
 You can also trigger a one-off test build without tagging via the

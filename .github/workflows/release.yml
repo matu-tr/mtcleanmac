@@ -40,22 +40,22 @@ jobs:
         run: python3 setup.py py2app
 
       - name: Ad-hoc code sign
-        run: codesign --force --deep --sign - "dist/MTCleanMac.app"
+        run: codesign --force --deep --sign - "dist/Silkele.app"
 
       - name: Zip app bundle
         run: |
           cd dist
-          zip -r "MTCleanMac-${GITHUB_REF_NAME:-dev}.zip" MTCleanMac.app
+          zip -r "Silkele-${GITHUB_REF_NAME:-dev}.zip" Silkele.app
 
       - name: Upload build artifact
         uses: actions/upload-artifact@v4
         with:
-          name: MTCleanMac-app
-          path: dist/MTCleanMac-*.zip
+          name: Silkele-app
+          path: dist/Silkele-*.zip
 
       - name: Create GitHub Release
         if: startsWith(github.ref, 'refs/tags/')
         uses: softprops/action-gh-release@v2
         with:
-          files: dist/MTCleanMac-*.zip
+          files: dist/Silkele-*.zip
           generate_release_notes: true

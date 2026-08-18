@@ -1,5 +1,5 @@
-# MTCleanMac
-# Copyright (C) 2026 Mansur Turasan
+# Silkele
+# Copyright (C) 2026 matu-tr
 #
 # This program is free software: you can redistribute it and/or modify
 # it under the terms of the GNU Affero General Public License as published by
@@ -25,20 +25,20 @@ DATA_FILES = []
 OPTIONS = {
     "argv_emulation": False,
     "plist": {
-        "CFBundleName": "MTCleanMac",
-        "CFBundleDisplayName": "MTCleanMac",
-        "CFBundleIdentifier": "com.mansur.mtcleanmac",
+        "CFBundleName": "Silkele",
+        "CFBundleDisplayName": "Silkele",
+        "CFBundleIdentifier": "tr.matu.silkele",
         "CFBundleVersion": VERSION,
         "CFBundleShortVersionString": VERSION,
         "LSUIElement": True,  # menu bar agent: no Dock icon, no app switcher entry
-        "NSHumanReadableCopyright": "Copyright (C) 2026 Mansur Turasan",
+        "NSHumanReadableCopyright": "Copyright (C) 2026 matu-tr",
     },
     "packages": ["rumps"],
 }
 
 setup(
     app=APP,
-    name="MTCleanMac",
+    name="Silkele",
     version=VERSION,
     data_files=DATA_FILES,
     options={"py2app": OPTIONS},

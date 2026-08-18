@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
-# MTCleanMac
-# Copyright (C) 2026 Mansur Turasan
+# Silkele
+# Copyright (C) 2026 matu-tr
 #
 # This program is free software: you can redistribute it and/or modify
 # it under the terms of the GNU Affero General Public License as published by
@@ -15,18 +15,18 @@
 # You should have received a copy of the GNU Affero General Public License
 # along with this program. If not, see <https://www.gnu.org/licenses/>.
 
-"""MTCleanMac menu bar app: lives in the macOS status bar, cleans with one click."""
+"""Silkele menu bar app: lives in the macOS status bar, cleans with one click."""
 import threading
 
 import rumps
 from ServiceManagement import SMAppService
 
-import MTCleanMac
+import silkele
 
 SM_APP_SERVICE_STATUS_ENABLED = 1
 
 
-class MTCleanMacApp(rumps.App):
+class SilkeleApp(rumps.App):
     def __init__(self):
         super().__init__("🧹", quit_button="Quit")
         self.clean_item = rumps.MenuItem("Clean Now", callback=self.clean_now)
@@ -47,9 +47,9 @@ class MTCleanMacApp(rumps.App):
     def _run_cleanup(self):
         error = None
         try:
-            for path in MTCleanMac.CLEANUP_PATHS:
-                MTCleanMac.delete_contents(path)
-            MTCleanMac.clean_snapshots()
+            for path in silkele.CLEANUP_PATHS:
+                silkele.delete_contents(path)
+            silkele.clean_snapshots()
         except Exception as e:
             error = str(e)
         finally:
@@ -58,9 +58,9 @@ class MTCleanMacApp(rumps.App):
             self.clean_item.title = "Clean Now"
             self.clean_item.set_callback(self.clean_now)
             if error:
-                rumps.notification("MTCleanMac", "Error", error)
+                rumps.notification("Silkele", "Error", error)
             else:
-                rumps.notification("MTCleanMac", "Done", "Cleanup finished ✅")
+                rumps.notification("Silkele", "Done", "Cleanup finished ✅")
 
     def _login_item_enabled(self):
         try:
@@ -78,9 +78,9 @@ class MTCleanMacApp(rumps.App):
             if not ok:
                 raise RuntimeError(str(error))
         except Exception as e:
-            rumps.notification("MTCleanMac", "Error", str(e))
+            rumps.notification("Silkele", "Error", str(e))
         sender.state = self._login_item_enabled()
 
 
 if __name__ == "__main__":
-    MTCleanMacApp().run()
+    SilkeleApp().run()
